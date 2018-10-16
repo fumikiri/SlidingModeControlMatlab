@@ -12,3 +12,5 @@ Sliding mode control is one of the strong robust control method in control theor
 I hope this simulation become someone help.
 
 
+https://github.com/fumikiri/SlidingModeControlMatlab/tree/master/GIF/lq_vs_smc_animation.gif
+
