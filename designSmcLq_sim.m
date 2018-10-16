@@ -39,7 +39,7 @@ R = 1;
 Klq = lqr(A,B,Q,R);
 
 % design of hyper plane with Linear quadratic method
-Q = diag([1e0 1e-1 1e0 1e0])*1e2;
+Q = diag([1e1 1e-1 1e0 1e0])*1e2;
 R = 1;
 S = lqr(A,B,Q,R);
 
@@ -71,7 +71,7 @@ plot(simTime,X(:,1))
 hold on
 grid on
 plot(simTime,Xlq(:,1))
-title('x without deadzone')
+title('horizontal position without deadzone')
 subplot(3,1,3)
 plot(simTime,X(:,3))
 grid on
@@ -99,7 +99,7 @@ plot(simTime,X(:,1))
 hold on
 grid on
 plot(simTime,Xlq(:,1))
-title('x with deadzone')
+title('horizontal position with deadzone')
 subplot(3,1,3)
 plot(simTime,X(:,3))
 grid on
@@ -108,3 +108,56 @@ plot(simTime,Xlq(:,3))
 title('Theta with deadzone')
 xlabel('time')
 legend('SMC', 'LQ')
+
+
+
+X1lqd = decimate(Xlq(:,1), 100)
+X3lqd = decimate(Xlq(:,3), 100)
+
+X1d = decimate(X(:,1), 100)
+X3d = decimate(X(:,3), 100)
+
+
+h = figure('Position',[100 100 800 400]);
+axis tight manual % this ensures that getframe() returns a consistent size
+filename = 'testAnimated.gif';
+for k = 1:(length(simTime)-1)/100+1
+    subplot(1,2,1)
+    yy = cos(X3lqd(k));
+    yx = sin(X3lqd(k));
+    x(1) = X1lqd(k)-1;
+    x(2) = X1lqd(k)+1;
+    plot(x,[0 0],'g-','LineWidth',5.5)
+    ylim([-0.1 1.1])
+    xlim([-3 3])
+    hold on
+    grid on
+    plot([X1lqd(k) X1lqd(k)+yx],[0 yy],'b-','LineWidth',8.0)
+    title({'Linear quadratic control' 'pos:' num2str(X1lqd(k),2) ' angle: ' num2str(X3lqd(k),2)})
+    hold off
+    drawnow
+    subplot(1,2,2)
+    yy = cos(X3d(k));
+    yx = sin(X3d(k));
+    x(1) = X1d(k)-1;
+    x(2) = X1d(k)+1;
+    plot(x,[0 0],'g-','LineWidth',5.5)
+    ylim([-0.1 1.1])
+    xlim([-3 3])
+    hold on
+    grid on
+    plot([X1d(k) X1d(k)+yx],[0 yy],'b-','LineWidth',8.0)
+    title({'Sliding mode control' 'pos: ' num2str(X1d(k),2)  '  angle: ' num2str(X3d(k),2) })
+    hold off
+    drawnow
+      % Capture the plot as an image 
+      frame = getframe(h); 
+      im = frame2im(frame); 
+      [imind,cm] = rgb2ind(im,512); 
+      % Write to the GIF File 
+      if k == 1 
+          imwrite(imind,cm,filename,'gif', 'Loopcount',inf,'DelayTime',Ts*100); 
+      else 
+          imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',Ts*100); 
+      end 
+end
