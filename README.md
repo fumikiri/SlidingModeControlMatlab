@@ -10,7 +10,7 @@ Sliding mode control is one of the strong robust control method in control theor
 I hope this simulation become someone help.
 
 ## Animation
-https://github.com/fumikiri/SlidingModeControlMatlab/tree/master/GIF/lq_vs_smc_animation.gif
+![result](https://github.com/fumikiri/SlidingModeControlMatlab/tree/master/GIF/lq_vs_smc_animation.gif)
 
 Each Animation is shown this link.
 Inverted pendulum has nonlinear element(dead zone) and time response of linear quadratic control has vibration around 0.
